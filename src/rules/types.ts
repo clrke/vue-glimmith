@@ -20,3 +20,6 @@ export interface RuleValidator {
     clues: readonly (readonly (CellClue | null)[])[],
   ): Violation[]
 }
+
+/** Registry key for each implemented rule — see `ruleRegistry` in `./index`. */
+export type RuleName = 'size' | 'sizeSeparation'

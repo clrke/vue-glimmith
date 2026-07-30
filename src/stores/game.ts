@@ -2,7 +2,7 @@ import { defineStore } from 'pinia'
 import { ref, computed, readonly } from 'vue'
 import type { Puzzle } from '../types/puzzle'
 import { computeRegions, regionCells, hWall, vWall } from '../solver/regions'
-import { sizeRule } from '../rules'
+import { ruleRegistry } from '../rules'
 
 export const useGameStore = defineStore('game', () => {
   const puzzle = ref<Puzzle | null>(null)
@@ -20,11 +20,13 @@ export const useGameStore = defineStore('game', () => {
 
   const violations = computed(() => {
     if (!puzzle.value) return []
-    return sizeRule.validate(
-      puzzle.value.n,
-      puzzle.value.m,
-      regionIds.value,
-      puzzle.value.clues,
+    return puzzle.value.rules.flatMap(name =>
+      ruleRegistry[name].validate(
+        puzzle.value!.n,
+        puzzle.value!.m,
+        regionIds.value,
+        puzzle.value!.clues,
+      ),
     )
   })
 

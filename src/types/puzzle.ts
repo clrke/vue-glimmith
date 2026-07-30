@@ -1,3 +1,5 @@
+import type { RuleName } from '../rules/types'
+
 /**
  * Identifies a wall between two adjacent cells.
  *
@@ -24,6 +26,13 @@ export type CellClue = SizeClue
  * player must figure out are left absent; players draw/erase them interactively.
  *
  * `clues[r][c]` is `null` if the cell carries no clue.
+ *
+ * `rules` lists which validators apply to this puzzle (registry keys from
+ * `src/rules/index.ts`). Rules are opt-in per puzzle rather than globally
+ * applied — different rule types conflict with each other's constraints in
+ * general (e.g. a Size-Separation-violating layout can be a perfectly valid
+ * Size-only solution), matching how the source game scopes rule types per
+ * level rather than applying every rule everywhere.
  */
 export interface Puzzle {
   id: string
@@ -36,4 +45,6 @@ export interface Puzzle {
   fixedWalls: EdgeKey[]
   /** Per-cell clue data; n × m, null = no clue. */
   clues: (CellClue | null)[][]
+  /** Registry keys of the rule validators active for this puzzle. */
+  rules: RuleName[]
 }
