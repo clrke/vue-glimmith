@@ -29,18 +29,22 @@ const classic4x4: Puzzle = {
 /**
  * Classic 5×5 Fillomino
  *
- * One valid solution:
- *   Region A (3): (0,0)–(0,1)–(0,2)
- *   Region B (2): (0,3)–(0,4)
- *   Region C (2): (1,0)–(2,0)
- *   Region D (4): (1,1)–(1,2)–(1,3)–(2,3)
- *   Region E (3): (1,4)–(2,4)–(3,4)
- *   Region F (4): (2,1)–(2,2)–(3,1)–(3,2)
- *   Region G (3): (3,0)–(4,0)–(4,1)
- *   Region H (2): (3,3)–(4,3)
- *   Region I (3): (4,2)–(4,4)   ← not connected! fix: (4,2)–(4,3)–(4,4)?
+ * The intended solution (verified by the solvability tests in
+ * `__tests__/puzzles.test.ts`):
  *
- * Simpler layout — 25 cells total across valid regions:
+ *   A A A B B      Region A (3): (0,0)-(0,1)-(0,2)   clue at (0,1)
+ *   C C D D B      Region B (3): (0,3)-(0,4)-(1,4)   clue at (0,4)
+ *   C C D D E      Region C (4): (1,0)-(1,1)-(2,0)-(2,1)   clue at (1,0)
+ *   F F G G E      Region D (4): (1,2)-(1,3)-(2,2)-(2,3)   clue at (1,3)
+ *   F F G G E      Region E (3): (2,4)-(3,4)-(4,4)   clue at (3,4)
+ *                  Region F (4): (3,0)-(3,1)-(4,0)-(4,1)   clue at (4,0)
+ *                  Region G (4): (3,2)-(3,3)-(4,2)-(4,3)   clue at (4,3)
+ *
+ * The clue values sum to 3+3+4+4+3+4+4 = 25 = the full board, so every cell
+ * belongs to a clued region. The previous clue set summed to only 21, which
+ * left 4 cells that no clue could ever constrain — meaning the puzzle had no
+ * "intended" solution at all and could only be completed by carving arbitrary
+ * unclued filler regions. `puzzles.test.ts` now guards against that.
  */
 const classic5x5: Puzzle = {
   id: 'classic-5',
@@ -50,11 +54,11 @@ const classic5x5: Puzzle = {
   fixedWalls: [],
   rules: ['size'],
   clues: [
-    [{ kind: 'size', value: 3 }, null, null, { kind: 'size', value: 2 }, null],
-    [null, null, { kind: 'size', value: 4 }, null, null],
-    [{ kind: 'size', value: 2 }, null, null, null, { kind: 'size', value: 3 }],
-    [null, null, { kind: 'size', value: 4 }, null, null],
-    [null, { kind: 'size', value: 3 }, null, null, null],
+    [null, { kind: 'size', value: 3 }, null, null, { kind: 'size', value: 3 }],
+    [{ kind: 'size', value: 4 }, null, null, { kind: 'size', value: 4 }, null],
+    [null, null, null, null, null],
+    [null, null, null, null, { kind: 'size', value: 3 }],
+    [{ kind: 'size', value: 4 }, null, null, { kind: 'size', value: 4 }, null],
   ],
 }
 
